@@ -1,0 +1,70 @@
+_BASE_: "../Base-RCNN-FPN.yaml"
+MODEL:
+  META_ARCHITECTURE: "TwoStagePseudoLabGeneralizedRCNN"
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  MASK_ON: True
+  RESNETS:
+    DEPTH: 50
+  PROPOSAL_GENERATOR:
+    NAME: "PseudoLabRPN"
+  RPN:
+    POSITIVE_FRACTION: 0.25
+    LOSS: "CrossEntropy"
+  ROI_HEADS:
+    NAME: "StandardROIHeadsPseudoLab"
+    LOSS: "FocalLoss"
+
+  ROI_MASK_HEAD:
+    NAME: "ImplicitPointRendPointSupHead"
+    POOLER_TYPE: ""  # No RoI pooling, let the head process image features directly
+    FC_DIM: 1024
+    NUM_FC: 1
+
+    POINT_HEAD_ON: True
+    OUTPUT_SIDE_RESOLUTION: 7
+    IN_FEATURES: ["p2"]  # for the coarse mask head
+
+
+  POINT_HEAD:
+    NAME: "ImplicitPointHead"
+    FC_DIM: 256
+    NUM_FC: 1
+    IN_FEATURES: ["p2"]
+    NUM_CLASSES: 80
+    CLS_AGNOSTIC_MASK: False
+    TRAIN_NUM_POINTS: 196
+    SUBDIVISION_STEPS: 3
+    SUBDIVISION_NUM_POINTS: 784
+  IMPLICIT_POINTREND:
+    IMAGE_FEATURE_ENABLED: True
+    POS_ENC_ENABLED: True
+    PARAMS_L2_REGULARIZER: 0.00001
+SOLVER:
+  LR_SCHEDULER_NAME: "WarmupMultiStepLR"
+  STEPS: (179990, 179995)
+  MAX_ITER: 180000
+  IMS_PER_BATCH_LABEL: 32
+  IMS_PER_BATCH_UNLABEL: 32
+  BASE_LR: 0.01
+DATALOADER:
+  SUP_PERCENT: 10.0
+  RANDOM_DATA_SEED: 1
+DATASETS:
+  CROSS_DATASET: False
+  TRAIN: ("coco_2017_train",)
+  TEST: ("coco_2017_val",)
+SEMISUPNET:
+  Trainer: "ubteacher"
+  BBOX_THRESHOLD: 0.7
+  TEACHER_UPDATE_ITER: 1
+  BURN_UP_STEP: 2000
+  EMA_KEEP_RATE: 0.9996
+  UNSUP_LOSS_WEIGHT: 4.0
+TEST:
+  EVAL_PERIOD: 1000
+  EVALUATOR: "COCOeval"
+INPUT:
+  # PointRend for instance segmentation does not work with "polygon" mask_format.
+  MASK_FORMAT: "bitmask"
+  POINT_SUP: True
+  SAMPLE_POINTS: 1

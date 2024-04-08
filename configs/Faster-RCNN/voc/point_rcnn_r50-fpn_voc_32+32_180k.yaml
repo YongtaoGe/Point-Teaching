@@ -1,0 +1,91 @@
+MODEL:
+  META_ARCHITECTURE: "TwoStagePseudoLabGeneralizedRCNN"
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  MASK_ON: False 
+  BACKBONE:
+    NAME: "build_resnet_fpn_backbone"
+  RESNETS:
+    DEPTH: 50
+    OUT_FEATURES: ["res2", "res3", "res4", "res5"]
+  FPN:
+    IN_FEATURES: ["res2", "res3", "res4", "res5"]
+  ANCHOR_GENERATOR:
+    SIZES: [[32], [64], [128], [256], [512]]  # One size for each in feature map
+    ASPECT_RATIOS: [[0.5, 1.0, 2.0]]  # Three aspect ratios (same for all in feature maps)
+  PROPOSAL_GENERATOR:
+    NAME: "PseudoLabRPN"
+  RPN:
+    IN_FEATURES: ["p2", "p3", "p4", "p5", "p6"]
+    PRE_NMS_TOPK_TRAIN: 2000  # Per FPN level
+    PRE_NMS_TOPK_TEST: 1000  # Per FPN level
+    # Detectron1 uses 2000 proposals per-batch,
+    # (See "modeling/rpn/rpn_outputs.py" for details of this legacy issue)
+    # which is approximately 1000 proposals per-image since the default batch size for FPN is 2.
+    POST_NMS_TOPK_TRAIN: 1000
+    POST_NMS_TOPK_TEST: 1000
+
+    POSITIVE_FRACTION: 0.25
+    LOSS: "CrossEntropy"
+
+  ROI_HEADS:
+    NAME: "MILROIHeadsPseudoLab"
+    IN_FEATURES: ["p2", "p3", "p4", "p5"]
+    LOSS: "FocalLoss"
+    NUM_CLASSES: 20
+    SCORE_THRESH_TEST: 0.001 # 0.05
+
+  ROI_BOX_HEAD:
+    NAME: "FastRCNNConvFCHead"
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+  ROI_MASK_HEAD:
+    NAME: "MaskRCNNConvUpsampleHead"
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 14
+
+SEMISUPNET:
+  Trainer: "ubteacher_point_sup"
+  BBOX_THRESHOLD: 0.05
+  TEACHER_UPDATE_ITER: 1
+  BURN_UP_STEP: 30000
+  EMA_KEEP_RATE: 0.999
+  UNSUP_LOSS_WEIGHT: 2.0
+
+  IMG_MIL_LOSS_WEIGHT: 1.0
+  INS_MIL_LOSS_WEIGHT: 0.05
+  IMG_MIL_FILTER_BG: False
+#   MATCHING_METHOD: "hungarian"
+
+DATASETS:
+  CROSS_DATASET: True
+  TRAIN: ("voc_2012_trainval_w_points",)
+  TRAIN_LABEL: ("voc_2007_trainval_w_points",)
+  TRAIN_UNLABEL: ("voc_2012_trainval_w_points",)
+  TEST: ("voc_2007_test",)
+
+DATALOADER:
+  SUP_PERCENT: 100.0
+
+SOLVER:
+  LR_SCHEDULER_NAME: "WarmupMultiStepLR"
+  STEPS: (179990, 179995)
+  MAX_ITER: 180000
+  IMS_PER_BATCH_LABEL: 32
+  IMS_PER_BATCH_UNLABEL: 32
+  BASE_LR: 0.01
+
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_TYPE: "value"
+    CLIP_VALUE: 35.0
+    NORM_TYPE: 2.0
+
+INPUT:
+  MIN_SIZE_TRAIN: (480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800)
+  MIN_SIZE_TEST: 600
+
+VERSION: 2
+TEST:
+  EVAL_PERIOD: 2000
+  EVALUATOR: "COCOeval"
+  VAL_LOSS: False
