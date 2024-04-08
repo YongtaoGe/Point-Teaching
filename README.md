@@ -3,6 +3,8 @@
 <h1>
 Point-teaching: Weakly semi-supervised Object Detection with Point Annotations
 </h1>
+</div>
+<br/>
 
 ## Install
 ```
