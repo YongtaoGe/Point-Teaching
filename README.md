@@ -1,7 +1,7 @@
 
 <div align="center">
 <h1>
-Point-teaching: Weakly semi-supervised Object Detection with Point Annotations
+Point-teaching: Weakly semi-supervised Object Detection with Point Annotations (AAAI 2023)
 </h1>
 </div>
 <br/>
