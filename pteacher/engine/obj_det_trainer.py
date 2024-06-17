@@ -255,7 +255,7 @@ class BaselineTrainer(DefaultTrainer):
 
 
 # Unbiased Teacher Trainer
-class UBTeacherTrainer(DefaultTrainer):
+class pteacherTrainer(DefaultTrainer):
     def __init__(self, cfg):
         """
         Args:
@@ -463,7 +463,7 @@ class UBTeacherTrainer(DefaultTrainer):
 
     def run_step_full_semisup(self):
         self._trainer.iter = self.iter
-        assert self.model.training, "[UBTeacherTrainer] model was changed to eval mode!"
+        assert self.model.training, "[pteacherTrainer] model was changed to eval mode!"
         start = time.perf_counter()
         data = next(self._trainer._data_loader_iter)
         # data_q and data_k from different augmentations (q:strong, k:weak)
@@ -842,7 +842,7 @@ class UBTeacherTrainer(DefaultTrainer):
 
 
 # PointSup Trainer based on Unbiased Teacher Trainer for faster-rcnn
-class FasterRCNNPointSupTrainer(UBTeacherTrainer):
+class FasterRCNNPointSupTrainer(pteacherTrainer):
     def __init__(self, cfg):
         """
         Args:
@@ -1499,7 +1499,7 @@ class FasterRCNNPointSupTrainer(UBTeacherTrainer):
 
     def run_step_full_semisup(self):
         self._trainer.iter = self.iter
-        assert self.model.training, "[UBTeacherTrainer] model was changed to eval mode!"
+        assert self.model.training, "[pteacherTrainer] model was changed to eval mode!"
         start = time.perf_counter()
 
         if self.resume and self.use_point_guided_cp:
@@ -1905,7 +1905,7 @@ class FasterRCNNPointSupTrainer(UBTeacherTrainer):
         return results
 
 # PointSup Trainer based on Unbiased Teacher Trainer for fcos
-class OneStageFCOSPointSupTrainer(UBTeacherTrainer):
+class OneStageFCOSPointSupTrainer(pteacherTrainer):
     def __init__(self, cfg):
         """
         Args:
@@ -2217,7 +2217,7 @@ class OneStageFCOSPointSupTrainer(UBTeacherTrainer):
 
     def run_step_full_semisup(self):
         self._trainer.iter = self.iter
-        assert self.model.training, "[UBTeacherTrainer] model was changed to eval mode!"
+        assert self.model.training, "[pteacherTrainer] model was changed to eval mode!"
         start = time.perf_counter()
 
         # burn-in stage (supervised training with labeled data)
@@ -2356,7 +2356,7 @@ class OneStageFCOSPointSupTrainer(UBTeacherTrainer):
 
 
 
-class FCOSPointSupTrainer(UBTeacherTrainer):
+class FCOSPointSupTrainer(pteacherTrainer):
     def __init__(self, cfg):
         """
         Args:
@@ -2659,7 +2659,7 @@ class FCOSPointSupTrainer(UBTeacherTrainer):
 
     def run_step_full_semisup(self):
         self._trainer.iter = self.iter
-        assert self.model.training, "[UBTeacherTrainer] model was changed to eval mode!"
+        assert self.model.training, "[pteacherTrainer] model was changed to eval mode!"
         start = time.perf_counter()
 
         # burn-in stage (supervised training with labeled data)

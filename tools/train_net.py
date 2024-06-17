@@ -6,9 +6,9 @@ from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
 from detectron2.engine import default_argument_parser, default_setup, launch
 
-from ubteacher import add_ubteacher_config, add_point_sup_config, add_pointrend_config, add_fcos_config, add_shapeprop_config, add_boxinst_config
-from pteacher.engine.obj_det_trainer import FasterRCNNPointSupTrainer, FCOSPointSupTrainer, UBTeacherTrainer, BaselineTrainer
-from pteacher.engine.ins_seg_trainer import MaskRCNNBaselineTrainer, MaskRCNNUBTeacherTrainer, MaskRCNNPointSupTrainer, LSJMaskRCNNPointSupTrainer
+from pteacher import add_pteacher_config, add_point_sup_config, add_pointrend_config, add_fcos_config, add_shapeprop_config, add_boxinst_config
+from pteacher.engine.obj_det_trainer import FasterRCNNPointSupTrainer, FCOSPointSupTrainer, pteacherTrainer, BaselineTrainer
+from pteacher.engine.ins_seg_trainer import MaskRCNNBaselineTrainer, MaskRCNNpteacherTrainer, MaskRCNNPointSupTrainer, LSJMaskRCNNPointSupTrainer
 # hacky way to register
 from pteacher.modeling.meta_arch.rcnn import TwoStagePseudoLabGeneralizedRCNN
 from pteacher.modeling.proposal_generator.rpn import PseudoLabRPN
@@ -28,7 +28,7 @@ def setup(args):
     Create configs and perform basic setups.
     """
     cfg = get_cfg()
-    add_ubteacher_config(cfg)
+    add_pteacher_config(cfg)
     add_point_sup_config(cfg)
     add_pointrend_config(cfg)
     add_fcos_config(cfg)
@@ -43,10 +43,10 @@ def setup(args):
 
 def main(args):
     cfg = setup(args)
-    if cfg.SEMISUPNET.Trainer == "faster_rcnn_ubteacher":
-        Trainer = UBTeacherTrainer
-    elif cfg.SEMISUPNET.Trainer == "mask_rcnn_ubteacher":
-        Trainer = MaskRCNNUBTeacherTrainer
+    if cfg.SEMISUPNET.Trainer == "faster_rcnn_pteacher":
+        Trainer = pteacherTrainer
+    elif cfg.SEMISUPNET.Trainer == "mask_rcnn_pteacher":
+        Trainer = MaskRCNNpteacherTrainer
     elif cfg.SEMISUPNET.Trainer == "faster_rcnn_point_sup":
         Trainer = FasterRCNNPointSupTrainer
     elif cfg.SEMISUPNET.Trainer == "mask_rcnn_point_sup":
@@ -63,9 +63,9 @@ def main(args):
         raise ValueError("Trainer Name is not found.")
 
     if args.eval_only:
-        if cfg.SEMISUPNET.Trainer == "faster_rcnn_ubteacher" \
+        if cfg.SEMISUPNET.Trainer == "faster_rcnn_pteacher" \
                 or cfg.SEMISUPNET.Trainer == "faster_rcnn_point_sup" \
-                or cfg.SEMISUPNET.Trainer == "mask_rcnn_ubteacher" \
+                or cfg.SEMISUPNET.Trainer == "mask_rcnn_pteacher" \
                 or cfg.SEMISUPNET.Trainer == "mask_rcnn_point_sup" \
                 or cfg.SEMISUPNET.Trainer == "lsj_mask_rcnn_point_sup" \
                 or cfg.SEMISUPNET.Trainer == "fcos_point_sup":

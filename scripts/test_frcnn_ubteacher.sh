@@ -1,4 +1,4 @@
-EXP_NAME=ubteacher
+EXP_NAME=pteacher
 OUTPUT_DIR=results/${EXP_NAME}
 CUDA_VISIBLE_DEVICES="0,1,2,3,4,5,6,7"
 
@@ -14,7 +14,7 @@ OMP_NUM_THREADS=1 python train_net.py \
        DATALOADER.NUM_WORKERS 2 \
        TEST.EVAL_PERIOD 5000 \
        SOLVER.CHECKPOINT_PERIOD 5000 \
-       SEMISUPNET.Trainer "faster_rcnn_ubteacher" \
+       SEMISUPNET.Trainer "faster_rcnn_pteacher" \
        SEMISUPNET.PSEUDO_BBOX_SAMPLE "hungarian" \
        SEMISUPNET.BURN_UP_STEP 36000 \
        SEMISUPNET.POINT_LOSS_WEIGHT 0.0 \
@@ -27,7 +27,7 @@ OMP_NUM_THREADS=1 python train_net.py \
        SOLVER.LR_SCHEDULER_NAME "WarmupTwoStageMultiStepLR" \
        SOLVER.FACTOR_LIST "(1, 0.1, 0.01)" \
        SOLVER.STEPS "(24000, 32000)" \
-       MODEL.WEIGHTS "./results/ubteacher/model_final.pth"
+       MODEL.WEIGHTS "./results/pteacher/model_final.pth"
 
 
 

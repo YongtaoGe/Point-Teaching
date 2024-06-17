@@ -17,7 +17,7 @@ import torch.nn.functional as F
 from torch.autograd import Function
 from torch.autograd.function import once_differentiable
 
-from ubteacher import _C as MSDA
+from pteacher import _C as MSDA
 
 
 class MSDeformAttnFunction(Function):

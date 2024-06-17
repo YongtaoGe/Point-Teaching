@@ -8,17 +8,19 @@ Point-teaching: Weakly semi-supervised Object Detection with Point Annotations
 
 ## Install
 ```
-
+pip install detectron2
+pip install -e . -v
 ```
 
 ## Train
 ```
-
+# 10% coco subset
+sh scripts/train_frcnn_10.0_ins_mil_point_match.sh
 ```
 
 ## Test
 ```
-
+sh scripts/test_frcnn.sh
 ```
 
 ## 🎓 Citation

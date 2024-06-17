@@ -44,7 +44,7 @@ MODEL:
     POOLER_RESOLUTION: 14
 
 SEMISUPNET:
-  Trainer: "ubteacher_point_sup"
+  Trainer: "pteacher_point_sup"
   BBOX_THRESHOLD: 0.05
   TEACHER_UPDATE_ITER: 1
   BURN_UP_STEP: 30000

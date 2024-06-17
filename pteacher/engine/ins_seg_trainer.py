@@ -241,7 +241,7 @@ class MaskRCNNBaselineTrainer(DefaultTrainer):
 
 
 # Unbiased Teacher Trainer without pointsup
-class MaskRCNNUBTeacherTrainer(DefaultTrainer):
+class MaskRCNNpteacherTrainer(DefaultTrainer):
     def __init__(self, cfg):
         """
         Args:
@@ -467,7 +467,7 @@ class MaskRCNNUBTeacherTrainer(DefaultTrainer):
 
     def run_step_full_semisup(self):
         self._trainer.iter = self.iter
-        assert self.model.training, "[UBTeacherTrainer] model was changed to eval mode!"
+        assert self.model.training, "[pteacherTrainer] model was changed to eval mode!"
         start = time.perf_counter()
         data = next(self._trainer._data_loader_iter)
         # data_q and data_k from different augmentations (q:strong, k:weak)
@@ -744,7 +744,7 @@ class MaskRCNNUBTeacherTrainer(DefaultTrainer):
 
 
 # PointSup Trainer based on Unbiased Teacher Trainer for mask-rcnn
-class MaskRCNNPointSupTrainer(MaskRCNNUBTeacherTrainer):
+class MaskRCNNPointSupTrainer(MaskRCNNpteacherTrainer):
     def __init__(self, cfg):
         """
         Args:
@@ -1545,7 +1545,7 @@ class MaskRCNNPointSupTrainer(MaskRCNNUBTeacherTrainer):
 
     def run_step_full_semisup(self):
         self._trainer.iter = self.iter
-        assert self.model.training, "[UBTeacherTrainer] model was changed to eval mode!"
+        assert self.model.training, "[pteacherTrainer] model was changed to eval mode!"
         start = time.perf_counter()
         data = next(self._trainer._data_loader_iter)
         # data_q and data_k from different augmentations (q:strong, k:weak)
@@ -2242,7 +2242,7 @@ class LSJMaskRCNNPointSupTrainer(MaskRCNNPointSupTrainer):
 
     def run_step_full_semisup(self):
         self._trainer.iter = self.iter
-        assert self.model.training, "[UBTeacherTrainer] model was changed to eval mode!"
+        assert self.model.training, "[pteacherTrainer] model was changed to eval mode!"
         start = time.perf_counter()
         data = next(self._trainer._data_loader_iter)
         # data_q and data_k from different augmentations (q:strong, k:weak)

@@ -22,7 +22,7 @@ requirements = ["torch", "torchvision"]
 
 def get_extensions():
     this_dir = os.path.dirname(os.path.abspath(__file__))
-    extensions_dir = os.path.join(this_dir, "ubteacher/layers/ms_deform_attn/src")
+    extensions_dir = os.path.join(this_dir, "pteacher/layers/ms_deform_attn/src")
     print(f"extensions_dir: {extensions_dir}")
 
     main_file = glob.glob(os.path.join(extensions_dir, "*.cpp"))
@@ -66,7 +66,7 @@ def get_extensions():
 
 if __name__ == '__main__':
     setup(
-        name="ubteacher",
+        name="pteacher",
         version="0.0.1",
         url="https://github.com/facebookresearch/d2go/detr",
         license='Apache-2.0',
@@ -76,7 +76,7 @@ if __name__ == '__main__':
             "fvcore==0.1.5.post20210624",
         ],
         packages=find_packages(exclude=["test_all.py"]),
-        package_data={ 'ubteacher': ['LICENSE']},
+        package_data={ 'pteacher': ['LICENSE']},
         ext_modules=get_extensions(),
         cmdclass={"build_ext": torch.utils.cpp_extension.BuildExtension},
 

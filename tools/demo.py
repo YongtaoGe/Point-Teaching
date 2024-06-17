@@ -15,7 +15,7 @@ from detectron2.data.detection_utils import read_image
 from detectron2.utils.logger import setup_logger
 
 from predictor import VisualizationDemo
-from ubteacher import add_ubteacher_config, add_point_sup_config, add_pointrend_config, add_fcos_config, add_shapeprop_config, add_boxinst_config
+from pteacher import add_pteacher_config, add_point_sup_config, add_pointrend_config, add_fcos_config, add_shapeprop_config, add_boxinst_config
 # hacky way to register
 from pteacher.modeling.meta_arch.rcnn import TwoStagePseudoLabGeneralizedRCNN
 from pteacher.modeling.proposal_generator.rpn import PseudoLabRPN
@@ -34,7 +34,7 @@ def setup_cfg(args):
     # To use demo for Panoptic-DeepLab, please uncomment the following two lines.
     # from detectron2.projects.panoptic_deeplab import add_panoptic_deeplab_config  # noqa
     # add_panoptic_deeplab_config(cfg)
-    add_ubteacher_config(cfg)
+    add_pteacher_config(cfg)
     add_point_sup_config(cfg)
     add_pointrend_config(cfg)
     add_fcos_config(cfg)

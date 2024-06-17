@@ -1,4 +1,4 @@
-DATASET=coco_2017_train_points_n2_v1
+10DATASET=coco_2017_train_points_n2_v1
 EXP_NAME=r50_coco_10.0
 OUTPUT_DIR=results/semi_weak_sup/frcnn/${EXP_NAME}
 CUDA_VISIBLE_DEVICES="0,1,2,3,4,5,6,7"

@@ -2,7 +2,7 @@
 from detectron2.config import CfgNode as CN
 
 
-def add_ubteacher_config(cfg):
+def add_pteacher_config(cfg):
     """
     Add config for semisupnet.
     """
@@ -28,7 +28,7 @@ def add_ubteacher_config(cfg):
     _C.SEMISUPNET.MLP_DIM = 128
 
     # Semi-supervised training
-    _C.SEMISUPNET.Trainer = "ubteacher"
+    _C.SEMISUPNET.Trainer = "pteacher"
     _C.SEMISUPNET.BBOX_THRESHOLD = 0.7
     _C.SEMISUPNET.COPY_PASTE_THRESHOLD = 0.05
     _C.SEMISUPNET.PSEUDO_BBOX_SAMPLE = "thresholding"
