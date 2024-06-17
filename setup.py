@@ -68,7 +68,7 @@ if __name__ == '__main__':
     setup(
         name="pteacher",
         version="0.0.1",
-        url="https://github.com/facebookresearch/d2go/detr",
+        url="https://github.com/YongtaoGe/Point-Teaching",
         license='Apache-2.0',
         install_requires=[
             "easydict",
